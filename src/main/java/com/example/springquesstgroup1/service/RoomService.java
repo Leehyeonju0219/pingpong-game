@@ -112,10 +112,8 @@ public class RoomService {
             }
         } else {
             int redTeam = 0;
-            int blueTeam = 0;
             for (UserRoom userRoom : userRoomList) {
                 if (userRoom.getTeam().equals(Team.RED)) redTeam += 1;
-                else blueTeam += 1;
             }
             if (redTeam < 2) team = Team.RED;
             else team = Team.BLUE;

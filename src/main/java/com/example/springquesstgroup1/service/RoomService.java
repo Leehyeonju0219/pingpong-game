@@ -65,4 +65,13 @@ public class RoomService {
         List<Room> roomList = roomRepository.findRoomsByIdBetween(size*page+1, size*(page+1));
         return new SelectAllRoomsResponse(totalElements, totalPages, roomList);
     }
+
+    public Room selectRoom(int roomId) {
+        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        Room room;
+        if (roomOptional.isPresent()) {
+            room = roomOptional.get();
+            return room;
+        } else return null;
+    }
 }

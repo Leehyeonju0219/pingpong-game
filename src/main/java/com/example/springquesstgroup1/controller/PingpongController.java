@@ -3,6 +3,7 @@ package com.example.springquesstgroup1.controller;
 import com.example.springquesstgroup1.dto.ApiResponse;
 import com.example.springquesstgroup1.dto.CreateRoomRequest;
 import com.example.springquesstgroup1.dto.InitRequest;
+import com.example.springquesstgroup1.entity.Room;
 import com.example.springquesstgroup1.service.RoomService;
 import com.example.springquesstgroup1.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,13 @@ public class PingpongController {
     public ApiResponse selectAllRooms(@RequestParam(name = "size") int size,
                                       @RequestParam(name = "page") int page) {
         return new ApiResponse<>(200, "API 요청이 성공했습니다.", roomService.selectAllRooms(size, page));
+    }
+
+    @GetMapping("/room/{roomId}")
+    public ApiResponse selectRoom(@PathVariable(name = "roomId") int roomId) {
+        Room room = roomService.selectRoom(roomId);
+        if (room == null) return new ApiResponse(201, "불가능한 요청입니다.", null);
+        else return new ApiResponse<>(200, "API 요청이 성공했습니다.", room);
     }
 
 

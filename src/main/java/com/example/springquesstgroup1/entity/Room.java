@@ -1,20 +1,48 @@
 package com.example.springquesstgroup1.entity;
 
+import com.example.springquesstgroup1.RoomStatus;
+import com.example.springquesstgroup1.RoomType;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Entity
+@NoArgsConstructor
+@Table(name = "room")
 public class Room {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private int host;
-    private String room_type;
-    private String status;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+
+    @Column(name = "room_type", nullable = false)
+    private RoomType roomType;
+
+    @Column(nullable = false)
+    private RoomStatus status;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    public Room(String title, int host, RoomType roomType, RoomStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.title = title;
+        this.host = host;
+        this.roomType = roomType;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

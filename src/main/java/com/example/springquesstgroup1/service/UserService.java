@@ -1,10 +1,7 @@
 package com.example.springquesstgroup1.service;
 
 import com.example.springquesstgroup1.UserStatus;
-import com.example.springquesstgroup1.dto.FakerApiResponse;
-import com.example.springquesstgroup1.dto.FakerApiResponseData;
-import com.example.springquesstgroup1.dto.InitRequest;
-import com.example.springquesstgroup1.dto.SelectAllUsersResponse;
+import com.example.springquesstgroup1.dto.*;
 import com.example.springquesstgroup1.entity.User;
 import com.example.springquesstgroup1.entity.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +17,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class PingpongService {
+public class UserService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public PingpongService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -90,4 +87,6 @@ public class PingpongService {
         List<User> userList = userRepository.findUsersByIdBetween(size*page+1, size*(page+1));
         return new SelectAllUsersResponse(totalElements, totalPages, userList);
     }
+
+
 }

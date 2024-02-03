@@ -6,6 +6,9 @@ import com.example.springquesstgroup1.entity.*;
 import com.example.springquesstgroup1.repository.RoomRepository;
 import com.example.springquesstgroup1.repository.UserRepository;
 import com.example.springquesstgroup1.repository.UserRoomRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -25,11 +28,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
     private final UserRoomRepository userRoomRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
+    @Transactional
     public boolean init(InitRequest initRequest) {
+        userRoomRepository.deleteAll();
         userRepository.deleteAll();
         roomRepository.deleteAll();
-        userRoomRepository.deleteAll();
+
+        resetIdSequence("user");
+        resetIdSequence("user_room");
+        resetIdSequence("room");
 
         int seed = initRequest.getSeed();
         int quantity = initRequest.getQuantity();
@@ -77,6 +87,12 @@ public class UserService {
             }
         } else return false;
         return true;
+    }
+
+    // id 초기화
+    private void resetIdSequence(String tableName) {
+        String sql = "ALTER TABLE " + tableName + " ALTER COLUMN id RESTART WITH 1";
+        entityManager.createNativeQuery(sql).executeUpdate();
     }
 
     public SelectAllUsersResponse selectAllUsers(int size, int page) {

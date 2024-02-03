@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RoomService {
@@ -154,5 +157,44 @@ public class RoomService {
         }
 
         return true;
+    }
+
+    public boolean startGame(int roomId, int userId) {
+        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        Room room;
+        if (roomOptional.isPresent()) {
+            room = roomOptional.get();
+        } else return false;
+
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user;
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+        } else return false;
+
+        if (room.getHost() != userId) return false;
+
+        List<UserRoom> userRoomList = userRoomRepository.findUserRoomsByRoomId(roomId);
+        if (room.getRoomType().equals(RoomType.SINGLE)) {
+            if (userRoomList.size() < 2) return false;
+        } else if (userRoomList.size() < 4) return false;
+
+        if (!room.getStatus().equals(RoomStatus.WAIT)) return false;
+
+        room.setStatus(RoomStatus.PROGRESS);
+        roomRepository.save(room);
+
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.schedule(() -> endGame(roomId), 1, TimeUnit.MINUTES);
+
+        return true;
+    }
+
+    public void endGame(int roomId) {
+        Room room = roomRepository.findById(roomId).orElse(null);
+        if (room != null && room.getStatus().equals(RoomStatus.PROGRESS)) {
+            room.setStatus(RoomStatus.FINISH);
+            roomRepository.save(room);
+        }
     }
 }

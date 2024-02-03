@@ -3,6 +3,7 @@ package com.example.springquesstgroup1.controller;
 import com.example.springquesstgroup1.dto.ApiResponse;
 import com.example.springquesstgroup1.dto.CreateRoomRequest;
 import com.example.springquesstgroup1.dto.InitRequest;
+import com.example.springquesstgroup1.dto.JoinRoomRequest;
 import com.example.springquesstgroup1.entity.Room;
 import com.example.springquesstgroup1.service.RoomService;
 import com.example.springquesstgroup1.service.UserService;
@@ -64,6 +65,12 @@ public class PingpongController {
         if (room == null) return new ApiResponse(201, "불가능한 요청입니다.", null);
         else return new ApiResponse<>(200, "API 요청이 성공했습니다.", room);
     }
+
+//    @PostMapping("/room/attention/{roomId}")
+//    public ApiResponse joinRoom(@PathVariable(name = "roomId") int roomId,
+//                                @RequestBody JoinRoomRequest joinRoomRequest) {
+//
+//    }
 
 
 }

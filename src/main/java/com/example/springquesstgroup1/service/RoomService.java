@@ -31,7 +31,7 @@ public class RoomService {
     public Room createRoom(CreateRoomRequest createRoomRequest) {
         int userId = createRoomRequest.getUserId();
         Optional<User> userOptional = userRepository.findById(userId);
-        UserRoom userRoom = userRoomRepository.findByUserId(userId);
+        List<UserRoom> userRoom = userRoomRepository.findUserRoomsByUserId(userId);
 
         User user;
         if (userOptional.isPresent()) {
@@ -39,7 +39,7 @@ public class RoomService {
         } else return null;
 
         // user 상태가 ACTIVE가 아닌 경우, user가 현재 참여한 방이 있는 경우
-        if (!user.getStatus().equals(UserStatus.ACTIVE) || userRoom != null) {
+        if (!user.getStatus().equals(UserStatus.ACTIVE) || userRoom.size() > 0) {
             return null;
         }
 
@@ -74,4 +74,19 @@ public class RoomService {
             return room;
         } else return null;
     }
+
+//    public boolean joinRoom(int roomId, int userId) {
+//        Optional<Room> roomOptional = roomRepository.findById(roomId);
+//        Optional<User> userOptional = userRepository.findById(roomId);
+//        Room room;
+//        User user;
+//        if (roomOptional.isPresent() && userOptional.isPresent()) {
+//            room = roomOptional.get();
+//            user = userOptional.get();
+//        } else return false;
+//
+//        if (!room.getStatus().equals(RoomStatus.WAIT)) return false;
+//        if (!user.getStatus().equals(UserStatus.ACTIVE)) return false;
+//
+//    }
 }

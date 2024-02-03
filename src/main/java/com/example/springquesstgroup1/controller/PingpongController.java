@@ -3,7 +3,7 @@ package com.example.springquesstgroup1.controller;
 import com.example.springquesstgroup1.dto.ApiResponse;
 import com.example.springquesstgroup1.dto.CreateRoomRequest;
 import com.example.springquesstgroup1.dto.InitRequest;
-import com.example.springquesstgroup1.dto.JoinRoomRequest;
+import com.example.springquesstgroup1.dto.RoomRequest;
 import com.example.springquesstgroup1.entity.Room;
 import com.example.springquesstgroup1.service.RoomService;
 import com.example.springquesstgroup1.service.UserService;
@@ -68,8 +68,16 @@ public class PingpongController {
 
     @PostMapping("/room/attention/{roomId}")
     public ApiResponse joinRoom(@PathVariable(name = "roomId") int roomId,
-                                @RequestBody JoinRoomRequest joinRoomRequest) {
-        if (roomService.joinRoom(roomId, joinRoomRequest.getUserId())) {
+                                @RequestBody RoomRequest roomRequest) {
+        if (roomService.joinRoom(roomId, roomRequest.getUserId())) {
+            return new ApiResponse<>(200, "API 요청이 성공했습니다.", null);
+        } else return new ApiResponse<>(201, "불가능한 요청입니다.", null);
+    }
+
+    @PostMapping("/room/out/{roomId}")
+    public ApiResponse outRoom(@PathVariable(name = "roomId") int roomId,
+                               @RequestBody RoomRequest roomRequest) {
+        if (roomService.outRoom(roomId, roomRequest.getUserId())) {
             return new ApiResponse<>(200, "API 요청이 성공했습니다.", null);
         } else return new ApiResponse<>(201, "불가능한 요청입니다.", null);
     }

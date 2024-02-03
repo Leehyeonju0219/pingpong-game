@@ -123,4 +123,36 @@ public class RoomService {
         userRoomRepository.save(userRoom);
         return true;
     }
+
+    public boolean outRoom(int roomId, int userId) {
+        UserRoom userRoom = userRoomRepository.findUserRoomByUserIdAndRoomId(userId, roomId);
+        if (userRoom == null) return false;
+
+        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        Room room;
+        if (roomOptional.isPresent()) {
+            room = roomOptional.get();
+        } else return false;
+        if (room.getStatus().equals(RoomStatus.PROGRESS) || room.getStatus().equals(RoomStatus.FINISH)) {
+            return false;
+        }
+
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user;
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+        } else return false;
+
+        if (room.getHost() == userId) {
+            List<UserRoom> userRoomList = userRoomRepository.findUserRoomsByRoomId(roomId);
+            for (UserRoom obj : userRoomList) {
+                userRoomRepository.delete(obj);
+            }
+            room.setStatus(RoomStatus.FINISH);
+        } else {
+            userRoomRepository.delete(userRoom);
+        }
+
+        return true;
+    }
 }

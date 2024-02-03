@@ -3,6 +3,6 @@ package com.example.springquesstgroup1.dto;
 import lombok.Getter;
 
 @Getter
-public class JoinRoomRequest {
+public class RoomRequest {
     private int userId;
 }

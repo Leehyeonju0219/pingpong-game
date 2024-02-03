@@ -39,7 +39,7 @@ public class PingpongController {
 
     @GetMapping("/user")
     public ApiResponse selectAllUsers(@RequestParam(name = "size") int size,
-                                            @RequestParam(name = "page") int page) {
+                                      @RequestParam(name = "page") int page) {
         return new ApiResponse<>(200, "API 요청이 성공했습니다.", userService.selectAllUsers(size, page));
     }
 
@@ -49,6 +49,12 @@ public class PingpongController {
             return new ApiResponse<>(201, "불가능한 요청입니다.", null);
         }
         return new ApiResponse<>(HttpStatus.OK.value(), "API 요청이 성공했습니다.", null);
+    }
+
+    @GetMapping("/room")
+    public ApiResponse selectAllRooms(@RequestParam(name = "size") int size,
+                                      @RequestParam(name = "page") int page) {
+        return new ApiResponse<>(200, "API 요청이 성공했습니다.", roomService.selectAllRooms(size, page));
     }
 
 

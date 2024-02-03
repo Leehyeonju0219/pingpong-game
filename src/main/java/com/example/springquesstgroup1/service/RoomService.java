@@ -160,7 +160,7 @@ public class RoomService {
         } else {
             userRoomRepository.delete(userRoom);
         }
-
+        roomRepository.save(room);
         return true;
     }
 

@@ -4,6 +4,7 @@ import com.example.springquesstgroup1.UserStatus;
 import com.example.springquesstgroup1.dto.FakerApiResponse;
 import com.example.springquesstgroup1.dto.FakerApiResponseData;
 import com.example.springquesstgroup1.dto.InitRequest;
+import com.example.springquesstgroup1.dto.SelectAllUsersResponse;
 import com.example.springquesstgroup1.entity.User;
 import com.example.springquesstgroup1.entity.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -75,5 +77,17 @@ public class PingpongService {
             }
         }
         return false;
+    }
+
+    public SelectAllUsersResponse selectAllUsers(int size, int page) {
+        int totalElements = userRepository.findAll().size();
+        int totalPages = (int) Math.ceil((double)totalElements/size);
+
+        if (totalElements == 0) {
+            return new SelectAllUsersResponse(totalElements, totalPages, new ArrayList<>());
+        }
+
+        List<User> userList = userRepository.findUsersByIdBetween(size*page+1, size*(page+1));
+        return new SelectAllUsersResponse(totalElements, totalPages, userList);
     }
 }

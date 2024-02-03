@@ -25,7 +25,14 @@ public class PingpongController {
 
     @GetMapping("/health")
     public NoDataApiResponse healthCheck() {
-        return new NoDataApiResponse(200, "API 요청이 성공했습니다.");
+        NoDataApiResponse noDataApiResponse;
+        try {
+            noDataApiResponse = new NoDataApiResponse(200, "API 요청이 성공했습니다.");
+        } catch (Exception e) {
+            noDataApiResponse = new NoDataApiResponse(500, "에러가 발생했습니다.");
+        }
+
+        return noDataApiResponse;
     }
 
     @PostMapping("/init")

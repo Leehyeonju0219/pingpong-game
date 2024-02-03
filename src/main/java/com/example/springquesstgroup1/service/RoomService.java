@@ -35,7 +35,7 @@ public class RoomService {
     public Room createRoom(CreateRoomRequest createRoomRequest) {
         int userId = createRoomRequest.getUserId();
         Optional<User> userOptional = userRepository.findById(userId);
-        List<UserRoom> userRoom = userRoomRepository.findUserRoomsByUserId(userId);
+        List<UserRoom> userRoomList = userRoomRepository.findUserRoomsByUserId(userId);
 
         User user;
         if (userOptional.isPresent()) {
@@ -43,7 +43,7 @@ public class RoomService {
         } else return null;
 
         // user 상태가 ACTIVE가 아닌 경우, user가 현재 참여한 방이 있는 경우
-        if (!user.getStatus().equals(UserStatus.ACTIVE) || userRoom.size() > 0) {
+        if (!user.getStatus().equals(UserStatus.ACTIVE) || userRoomList.size() > 0) {
             return null;
         }
 
@@ -54,8 +54,12 @@ public class RoomService {
         LocalDateTime updatedAt = LocalDateTime.now();
 
         Room room = new Room(title, userId, roomType, RoomStatus.WAIT, createdAt, updatedAt);
+        room = roomRepository.save(room);
 
-        return roomRepository.save(room);
+        UserRoom userRoom = new UserRoom(room.getId(), userId, Team.RED);
+        userRoomRepository.save(userRoom);
+
+        return room;
     }
 
     public SelectAllRoomsResponse selectAllRooms(int size, int page) {
@@ -70,7 +74,7 @@ public class RoomService {
         return new SelectAllRoomsResponse(totalElements, totalPages, roomList);
     }
 
-    public Room selectRoom(int roomId) {
+    public Room roomDetail(int roomId) {
         Optional<Room> roomOptional = roomRepository.findById(roomId);
         Room room;
         if (roomOptional.isPresent()) {

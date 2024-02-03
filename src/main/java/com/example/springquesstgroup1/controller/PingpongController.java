@@ -64,8 +64,8 @@ public class PingpongController {
     }
 
     @GetMapping("/room/{roomId}")
-    public ApiResponse selectRoom(@PathVariable(name = "roomId") int roomId) {
-        Room room = roomService.selectRoom(roomId);
+    public ApiResponse roomDetail(@PathVariable(name = "roomId") int roomId) {
+        Room room = roomService.roomDetail(roomId);
         if (room == null) return new ApiResponse(201, "불가능한 요청입니다.", null);
         else return new ApiResponse<>(200, "API 요청이 성공했습니다.", room);
     }

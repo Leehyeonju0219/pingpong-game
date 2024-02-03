@@ -2,9 +2,8 @@ package com.example.springquesstgroup1.service;
 
 import com.example.springquesstgroup1.UserStatus;
 import com.example.springquesstgroup1.dto.*;
-import com.example.springquesstgroup1.entity.User;
-import com.example.springquesstgroup1.entity.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.springquesstgroup1.entity.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +16,18 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final RoomRepository roomRepository;
+    private final UserRoomRepository userRoomRepository;
 
     public boolean init(InitRequest initRequest) {
+        userRepository.deleteAll();
+        roomRepository.deleteAll();
+        userRoomRepository.deleteAll();
+
         int seed = initRequest.getSeed();
         int quantity = initRequest.getQuantity();
 

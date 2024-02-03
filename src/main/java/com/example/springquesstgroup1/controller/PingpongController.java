@@ -1,9 +1,6 @@
 package com.example.springquesstgroup1.controller;
 
-import com.example.springquesstgroup1.dto.ApiResponse;
-import com.example.springquesstgroup1.dto.CreateRoomRequest;
-import com.example.springquesstgroup1.dto.InitRequest;
-import com.example.springquesstgroup1.dto.RoomRequest;
+import com.example.springquesstgroup1.dto.*;
 import com.example.springquesstgroup1.entity.Room;
 import com.example.springquesstgroup1.service.RoomService;
 import com.example.springquesstgroup1.service.UserService;
@@ -27,16 +24,16 @@ public class PingpongController {
     }
 
     @GetMapping("/health")
-    public ApiResponse healthCheck() {
-        return new ApiResponse(200, "API 요청이 성공했습니다.", null);
+    public NoDataApiResponse healthCheck() {
+        return new NoDataApiResponse(200, "API 요청이 성공했습니다.");
     }
 
     @PostMapping("/init")
-    public ApiResponse init(@RequestBody InitRequest initRequest) {
+    public NoDataApiResponse init(@RequestBody InitRequest initRequest) {
         if (userService.init(initRequest)) {
-            return new ApiResponse(HttpStatus.OK.value(), "API 요청이 성공했습니다.", null);
+            return new NoDataApiResponse(HttpStatus.OK.value(), "API 요청이 성공했습니다.");
         }
-        return new ApiResponse(500, "에러가 발생했습니다.", null);
+        return new NoDataApiResponse(500, "에러가 발생했습니다.");
     }
 
     @GetMapping("/user")
@@ -46,11 +43,11 @@ public class PingpongController {
     }
 
     @PostMapping("/room")
-    public ApiResponse createRoom(@RequestBody CreateRoomRequest createRoomRequest) {
+    public NoDataApiResponse createRoom(@RequestBody CreateRoomRequest createRoomRequest) {
         if (roomService.createRoom(createRoomRequest) == null) {
-            return new ApiResponse<>(201, "불가능한 요청입니다.", null);
+            return new NoDataApiResponse(201, "불가능한 요청입니다.");
         }
-        return new ApiResponse<>(HttpStatus.OK.value(), "API 요청이 성공했습니다.", null);
+        return new NoDataApiResponse(HttpStatus.OK.value(), "API 요청이 성공했습니다.");
     }
 
     @GetMapping("/room")
@@ -67,38 +64,37 @@ public class PingpongController {
     }
 
     @PostMapping("/room/attention/{roomId}")
-    public ApiResponse joinRoom(@PathVariable(name = "roomId") int roomId,
+    public NoDataApiResponse joinRoom(@PathVariable(name = "roomId") int roomId,
                                 @RequestBody RoomRequest roomRequest) {
         if (roomService.joinRoom(roomId, roomRequest.getUserId())) {
-            return new ApiResponse<>(200, "API 요청이 성공했습니다.", null);
-        } else return new ApiResponse<>(201, "불가능한 요청입니다.", null);
+            return new NoDataApiResponse(200, "API 요청이 성공했습니다.");
+        } else return new NoDataApiResponse(201, "불가능한 요청입니다.");
     }
 
     @PostMapping("/room/out/{roomId}")
-    public ApiResponse outRoom(@PathVariable(name = "roomId") int roomId,
+    public NoDataApiResponse outRoom(@PathVariable(name = "roomId") int roomId,
                                @RequestBody RoomRequest roomRequest) {
         if (roomService.outRoom(roomId, roomRequest.getUserId())) {
-            return new ApiResponse<>(200, "API 요청이 성공했습니다.", null);
-        } else return new ApiResponse<>(201, "불가능한 요청입니다.", null);
+            return new NoDataApiResponse(200, "API 요청이 성공했습니다.");
+        } else return new NoDataApiResponse(201, "불가능한 요청입니다.");
     }
 
     @PutMapping("/room/start/{roomId}")
-    public ApiResponse startGame(@PathVariable(name = "roomId") int roomId,
+    public NoDataApiResponse startGame(@PathVariable(name = "roomId") int roomId,
                                  @RequestBody RoomRequest roomRequest) {
         boolean result = roomService.startGame(roomId, roomRequest.getUserId());
-        if (!result) return new ApiResponse(201, "불가능한 요청입니다.", null);
+        if (!result) return new NoDataApiResponse(201, "불가능한 요청입니다.");
 
-        return new ApiResponse<>(200, "API 요청이 성공했습니다.", null);
+        return new NoDataApiResponse(200, "API 요청이 성공했습니다.");
     }
 
     @PutMapping("/team/{roomId}")
-    public ApiResponse changeTeam(@PathVariable(name = "roomId") int roomId,
+    public NoDataApiResponse changeTeam(@PathVariable(name = "roomId") int roomId,
                                   @RequestBody RoomRequest roomRequest) {
         boolean result = roomService.changeTeam(roomId, roomRequest.getUserId());
-        if (!result) return new ApiResponse<>(201, "불가능한 요청입니다.", null);
+        if (!result) return new NoDataApiResponse(201, "불가능한 요청입니다.");
 
-        return new ApiResponse<>(200, "API 요청이 성공했습니다.", null);
+        return new NoDataApiResponse(200, "API 요청이 성공했습니다.");
     }
-
 
 }

@@ -7,9 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ApiResponse<T> {
+public class NoDataApiResponse {
     private Integer code;
     private String message;
-    private T result;
 }
-

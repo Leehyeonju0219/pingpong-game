@@ -197,4 +197,53 @@ public class RoomService {
             roomRepository.save(room);
         }
     }
+
+    public boolean changeTeam(int roomId, int userId) {
+        Room room = roomRepository.findById(roomId).orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
+        if (room == null || user == null) return false;
+
+        UserRoom userRoom = userRoomRepository.findUserRoomByUserIdAndRoomId(userId, roomId);
+        if (userRoom == null) return false;
+
+        if (!room.getStatus().equals(RoomStatus.WAIT)) return false;
+
+        List<UserRoom> userRoomList = userRoomRepository.findUserRoomsByRoomId(roomId);
+        if (room.getRoomType().equals(RoomType.SINGLE)) {
+            if (userRoom.getTeam().equals(Team.RED)) {
+                int blueSize = 0;
+                for (UserRoom obj : userRoomList) {
+                    if (obj.getTeam().equals(Team.BLUE)) blueSize += 1;
+                }
+                if (blueSize >= 1) return false;
+                else userRoom.setTeam(Team.BLUE);
+            } else {
+                int redSize = 0;
+                for (UserRoom obj : userRoomList) {
+                    if (obj.getTeam().equals(Team.RED)) redSize += 1;
+                }
+                if (redSize >= 1) return false;
+                else userRoom.setTeam(Team.RED);
+            }
+        } else {
+            if (userRoom.getTeam().equals(Team.RED)) {
+                int blueSize = 0;
+                for (UserRoom obj : userRoomList) {
+                    if (obj.getTeam().equals(Team.BLUE)) blueSize += 1;
+                }
+                if (blueSize >= 2) return false;
+                else userRoom.setTeam(Team.BLUE);
+            } else {
+                int redSize = 0;
+                for (UserRoom obj : userRoomList) {
+                    if (obj.getTeam().equals(Team.RED)) redSize += 1;
+                }
+                if (redSize >= 2) return false;
+                else userRoom.setTeam(Team.RED);
+            }
+        }
+
+        userRoomRepository.save(userRoom);
+        return true;
+    }
 }

@@ -91,5 +91,14 @@ public class PingpongController {
         return new ApiResponse<>(200, "API 요청이 성공했습니다.", null);
     }
 
+    @PutMapping("/team/{roomId}")
+    public ApiResponse changeTeam(@PathVariable(name = "roomId") int roomId,
+                                  @RequestBody RoomRequest roomRequest) {
+        boolean result = roomService.changeTeam(roomId, roomRequest.getUserId());
+        if (!result) return new ApiResponse<>(201, "불가능한 요청입니다.", null);
+
+        return new ApiResponse<>(200, "API 요청이 성공했습니다.", null);
+    }
+
 
 }

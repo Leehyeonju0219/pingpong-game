@@ -37,9 +37,11 @@ public class UserService {
         ParameterizedTypeReference<FakerApiResponse<List<FakerApiResponseData>>> responseType = new ParameterizedTypeReference<>() {};
         ResponseEntity<FakerApiResponse<List<FakerApiResponseData>>> responseEntity = restTemplate.exchange(initURL, HttpMethod.GET, null, responseType);
 
-        List<FakerApiResponseData> data;
+        List<FakerApiResponseData> data = new ArrayList<>();
         try {
-            data = Objects.requireNonNull(responseEntity.getBody()).getData();
+            for (int i = 0; i < Objects.requireNonNull(responseEntity.getBody()).getTotal(); i++) {
+                data.add(Objects.requireNonNull(responseEntity.getBody()).getData().get(i));
+            }
         } catch (NullPointerException e) {
             data = null;
         }
@@ -66,14 +68,11 @@ public class UserService {
                 user.setCreatedAt(now);
                 user.setUpdatedAt(now);
 
-                System.out.println(user.getFakerId());
-
                 // 저장
                 userRepository.save(user);
-                return true;
             }
-        }
-        return false;
+        } else return false;
+        return true;
     }
 
     public SelectAllUsersResponse selectAllUsers(int size, int page) {

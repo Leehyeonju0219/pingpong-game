@@ -2,6 +2,7 @@ package com.example.springquesstgroup1.service;
 
 import com.example.springquesstgroup1.RoomStatus;
 import com.example.springquesstgroup1.RoomType;
+import com.example.springquesstgroup1.Team;
 import com.example.springquesstgroup1.UserStatus;
 import com.example.springquesstgroup1.dto.CreateRoomRequest;
 import com.example.springquesstgroup1.dto.SelectAllRoomsResponse;
@@ -75,18 +76,51 @@ public class RoomService {
         } else return null;
     }
 
-//    public boolean joinRoom(int roomId, int userId) {
-//        Optional<Room> roomOptional = roomRepository.findById(roomId);
-//        Optional<User> userOptional = userRepository.findById(roomId);
-//        Room room;
-//        User user;
-//        if (roomOptional.isPresent() && userOptional.isPresent()) {
-//            room = roomOptional.get();
-//            user = userOptional.get();
-//        } else return false;
-//
-//        if (!room.getStatus().equals(RoomStatus.WAIT)) return false;
-//        if (!user.getStatus().equals(UserStatus.ACTIVE)) return false;
-//
-//    }
+    public boolean joinRoom(int roomId, int userId) {
+        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        Optional<User> userOptional = userRepository.findById(userId);
+        Room room;
+        User user;
+        if (roomOptional.isPresent() && userOptional.isPresent()) {
+            room = roomOptional.get();
+            user = userOptional.get();
+        } else return false;
+
+        if (!room.getStatus().equals(RoomStatus.WAIT)) return false;
+        if (!user.getStatus().equals(UserStatus.ACTIVE)) return false;
+
+        List<UserRoom> userRoomList = userRoomRepository.findUserRoomsByRoomId(roomId);
+        for (UserRoom userRoom : userRoomList) {
+            if (userRoom.getUserId() == userId) return false;
+        }
+
+        if (room.getRoomType().equals(RoomType.SINGLE)) {
+            if (userRoomList.size() >= 2) return false;
+        } else if (room.getRoomType().equals(RoomType.DOUBLE)) {
+            if (userRoomList.size() >= 4) return false;
+        } else return false;
+
+        // 팀 배정
+        Team team = Team.RED;
+        if (room.getRoomType().equals(RoomType.SINGLE)) {
+            for (UserRoom userRoom : userRoomList) {
+                if (userRoom.getTeam().equals(Team.RED)) team = Team.BLUE;
+                else team = Team.RED;
+            }
+        } else {
+            int redTeam = 0;
+            int blueTeam = 0;
+            for (UserRoom userRoom : userRoomList) {
+                if (userRoom.getTeam().equals(Team.RED)) redTeam += 1;
+                else blueTeam += 1;
+            }
+            if (redTeam < 2) team = Team.RED;
+            else team = Team.BLUE;
+        }
+
+        UserRoom userRoom = new UserRoom(roomId, userId, team);
+
+        userRoomRepository.save(userRoom);
+        return true;
+    }
 }

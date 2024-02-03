@@ -66,11 +66,13 @@ public class PingpongController {
         else return new ApiResponse<>(200, "API 요청이 성공했습니다.", room);
     }
 
-//    @PostMapping("/room/attention/{roomId}")
-//    public ApiResponse joinRoom(@PathVariable(name = "roomId") int roomId,
-//                                @RequestBody JoinRoomRequest joinRoomRequest) {
-//
-//    }
+    @PostMapping("/room/attention/{roomId}")
+    public ApiResponse joinRoom(@PathVariable(name = "roomId") int roomId,
+                                @RequestBody JoinRoomRequest joinRoomRequest) {
+        if (roomService.joinRoom(roomId, joinRoomRequest.getUserId())) {
+            return new ApiResponse<>(200, "API 요청이 성공했습니다.", null);
+        } else return new ApiResponse<>(201, "불가능한 요청입니다.", null);
+    }
 
 
 }

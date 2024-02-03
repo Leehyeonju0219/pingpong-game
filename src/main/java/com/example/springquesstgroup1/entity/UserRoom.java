@@ -26,4 +26,10 @@ public class UserRoom {
     @Column(nullable = false)
     private Team team;
 
+    public UserRoom(int roomId, int userId, Team team) {
+        this.roomId = roomId;
+        this.userId = userId;
+        this.team = team;
+    }
+
 }

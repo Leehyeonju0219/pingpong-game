@@ -2,6 +2,7 @@ package com.example.springquesstgroup1.entity;
 
 import com.example.springquesstgroup1.RoomStatus;
 import com.example.springquesstgroup1.RoomType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +33,11 @@ public class Room {
     private RoomStatus status;
 
     @Column(name = "created_at", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
     public Room(String title, int host, RoomType roomType, RoomStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {

@@ -1,5 +1,6 @@
-package com.example.springquesstgroup1.entity;
+package com.example.springquesstgroup1.repository;
 
+import com.example.springquesstgroup1.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

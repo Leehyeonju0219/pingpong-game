@@ -7,6 +7,9 @@ import com.example.springquesstgroup1.UserStatus;
 import com.example.springquesstgroup1.dto.CreateRoomRequest;
 import com.example.springquesstgroup1.dto.SelectAllRoomsResponse;
 import com.example.springquesstgroup1.entity.*;
+import com.example.springquesstgroup1.repository.RoomRepository;
+import com.example.springquesstgroup1.repository.UserRepository;
+import com.example.springquesstgroup1.repository.UserRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -197,6 +200,10 @@ public class RoomService {
         if (room != null && room.getStatus().equals(RoomStatus.PROGRESS)) {
             room.setStatus(RoomStatus.FINISH);
             roomRepository.save(room);
+        }
+        List<UserRoom> userRoomList = userRoomRepository.findUserRoomsByRoomId(roomId);
+        for (UserRoom userRoom : userRoomList) {
+            userRoomRepository.delete(userRoom);
         }
     }
 
